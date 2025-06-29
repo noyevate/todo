@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todo/core/extensions/space_exs.dart';
 import 'package:todo/core/utils/colors.dart';
 import 'package:todo/core/utils/reusable_text.dart';
+import 'package:todo/feature/home/presentation/pages/home.dart';
+import 'package:todo/feature/task/data/models/task_model.dart';
 import 'package:todo/feature/task/domain/entities/task.dart';
 import 'package:todo/feature/task/presentation/bloc/task_event.dart';
 import 'package:todo/feature/task/presentation/widget/repeated_tex_field.dart';
@@ -12,14 +14,15 @@ import 'package:todo/feature/task/presentation/widget/task_view_app_bar.dart';
 import '../../../../core/utils/strings.dart';
 import '../bloc/task_bloc.dart';
 
-class TaskView extends StatefulWidget {
-  const TaskView({super.key});
+class UpdateSingleTask extends StatefulWidget {
+  final Task task;
+  const UpdateSingleTask({super.key, required this.task});
 
   @override
-  State<TaskView> createState() => _TaskViewState();
+  State<UpdateSingleTask> createState() => _UpdateSingleTaskState();
 }
 
-class _TaskViewState extends State<TaskView> {
+class _UpdateSingleTaskState extends State<UpdateSingleTask> {
   final TextEditingController controller = TextEditingController();
   final TextEditingController descriptionTaskController =
       TextEditingController();
@@ -27,17 +30,22 @@ class _TaskViewState extends State<TaskView> {
   void _submit() {
     if (controller.text.trim().isEmpty) return;
 
-    final newTask = Task.create(
-      title: controller.text.trim(),
+    final updatedTask = widget.task.copyWith(
+  title: controller.text.trim(),
       subTitle: descriptionTaskController.text.trim(),
-    );
+  // keep id unchanged!
+);
 
-    context.read<TaskBloc>().add(AddTask(newTask));
-    Navigator.pop(context);
+    context.read<TaskBloc>().add(UpdateTask(updatedTask));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeView())); // return to home
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
+    controller.text = widget.task.title.toString();
+    descriptionTaskController.text = widget.task.subTitle.toString();
     TextTheme textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
@@ -91,27 +99,27 @@ class _TaskViewState extends State<TaskView> {
     return Padding(
       padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
       child: Center(
-        child: SizedBox(
-          width: 300.w,
-          child: MaterialButton(
-            onPressed: () {
-              _submit();
-            },
-            minWidth: 130,
-            color: AppColors.primaryColor,
-            height: 35,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: ReuseableText(
-                title: AppStrings.addNewTask,
-                style: TextStyle(color: Colors.white),
+              child: SizedBox(
+                width: 300.w,
+                child: MaterialButton(
+                            onPressed: () {
+                             _submit();
+                            },
+                            minWidth: 130,
+                            color: AppColors.primaryColor,
+                            height: 35,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Center(
+                              child: ReuseableText(
+                                title: AppStrings.updateCurrentTask,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -128,16 +136,16 @@ class _TaskViewState extends State<TaskView> {
         ),
         RichText(
           text: TextSpan(
-              text: "Add New ",
-              style: textTheme.titleLarge,
+              text: "Update ",
+              style: TextStyle(
+                fontSize: 28,
+                      fontWeight: FontWeight.w400, color: Theme.of(context).brightness == Brightness.dark ? AppColors.grey: Colors.black), 
               children: [
                 TextSpan(
                   text: AppStrings.taskStrnig,
                   style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? AppColors.grey
-                          : Colors.black),
+                    fontSize: 28,
+                      fontWeight: FontWeight.w400, color: Theme.of(context).brightness == Brightness.dark ? AppColors.grey: Colors.black),
                 )
               ]),
         ),
@@ -150,4 +158,6 @@ class _TaskViewState extends State<TaskView> {
       ],
     );
   }
+
+  
 }

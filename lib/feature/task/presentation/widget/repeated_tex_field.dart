@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/core/utils/colors.dart';
 
 import '../../../../core/utils/strings.dart';
 
@@ -22,7 +23,9 @@ class RepeatedTexField extends StatelessWidget {
           controller: titleTaskController,
           maxLines: !isForDescription ? 6 : null,
           cursorHeight: !isForDescription ? 40 : null,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Theme.of(context).brightness == Brightness.dark
+                          ? const Color.fromARGB(255, 203, 189, 189)
+                          : Colors.black),
           decoration: InputDecoration(
             border: isForDescription ? InputBorder.none : null,
             counter: Container(),

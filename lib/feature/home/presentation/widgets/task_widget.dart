@@ -67,7 +67,7 @@ class TaskWidget extends StatelessWidget {
                 ReuseableText(
                   title: task.subTitle,
                   style: TextStyle(
-                      color: Colors.white,
+                      color: task.isCompleted ?AppColors.grey:  AppColors.darkgrey,
                       fontWeight: FontWeight.w300),
                 ),
                 Align(

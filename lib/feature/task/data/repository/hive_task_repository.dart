@@ -9,7 +9,6 @@ class HiveTaskRepositoryImpl implements TaskRepository {
   @override
   Future<void> addTask(Task task) async {
     await taskBox.put(task.id, TaskModel.fromEntity(task));
-    
   }
 
   @override
@@ -26,5 +25,10 @@ class HiveTaskRepositoryImpl implements TaskRepository {
   Future<void> toggleTaskCompletion(Task task) async {
     final updatedTask = task.copyWith(isCompleted: !task.isCompleted);
     await taskBox.put(updatedTask.id, TaskModel.fromEntity(updatedTask));
+  }
+
+  @override
+  Future<void> updateTask(Task task) async {
+    await taskBox.put(task.id, TaskModel.fromEntity(task));
   }
 }

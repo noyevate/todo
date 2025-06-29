@@ -13,10 +13,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     });
 
     on<AddTask>((event, emit) async {
-      final task = await repository.addTask(event.task);
-    //  print(task);
+      await repository.addTask(event.task);
       final tasks = await repository.getTasks();
-      print("${tasks.length}");
       emit(state.copyWith(tasks: tasks));
     });
 
@@ -28,6 +26,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     on<ToggleTaskCompletion>((event, emit) async {
       await repository.toggleTaskCompletion(event.task);
+      final tasks = await repository.getTasks();
+      emit(state.copyWith(tasks: tasks));
+    });
+
+    on<UpdateTask>((event, emit) async {
+      await repository.updateTask(event.task);
       final tasks = await repository.getTasks();
       emit(state.copyWith(tasks: tasks));
     });

@@ -19,3 +19,8 @@ class ToggleTaskCompletion extends TaskEvent {
   final Task task;
   ToggleTaskCompletion(this.task);
 }
+
+class UpdateTask extends TaskEvent {
+  final Task task;
+  UpdateTask(this.task);
+}
