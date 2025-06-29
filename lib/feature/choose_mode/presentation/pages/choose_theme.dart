@@ -7,8 +7,8 @@ import 'package:todo/core/extensions/space_exs.dart';
 import 'package:todo/core/utils/colors.dart';
 import 'package:todo/core/utils/reusable_text.dart';
 import 'package:todo/core/utils/size.dart';
-import 'package:todo/feture/choose_mode/presentation/bloc/theme_event.dart';
-import 'package:todo/feture/home/presentation/pages/home.dart';
+import 'package:todo/feature/choose_mode/presentation/bloc/theme_event.dart';
+import 'package:todo/feature/home/presentation/pages/home.dart';
 
 import '../bloc/theme_bloc.dart';
 

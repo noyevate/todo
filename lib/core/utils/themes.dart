@@ -63,7 +63,7 @@ class AppTheme {
     brightness: Brightness.dark,
     textTheme: const TextTheme(
           displayLarge: TextStyle(
-            color: Colors.black,
+            color: Colors.grey,
             fontSize: 45,
             fontWeight: FontWeight.bold,
             fontFamily: 'Metropolis'

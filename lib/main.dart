@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:todo/core/utils/themes.dart';
-import 'package:todo/feture/choose_mode/presentation/bloc/theme_bloc.dart';
-import 'package:todo/feture/choose_mode/presentation/bloc/theme_state.dart';
-import 'package:todo/feture/choose_mode/presentation/pages/choose_theme.dart';
+import 'package:todo/feature/choose_mode/presentation/bloc/theme_bloc.dart';
+import 'package:todo/feature/choose_mode/presentation/bloc/theme_state.dart';
+import 'package:todo/feature/choose_mode/presentation/pages/choose_theme.dart';
 
 void main() {
   runApp(
