@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/utils/strings.dart';
+
+class RepeatedTexField extends StatelessWidget {
+  const RepeatedTexField({
+    super.key,
+    required this.titleTaskController, this.isForDescription = false,
+  });
+
+  final TextEditingController titleTaskController;
+  final bool isForDescription ;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      width: double.infinity,
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: TextFormField(
+          controller: titleTaskController,
+          maxLines: !isForDescription ? 6 : null,
+          cursorHeight: !isForDescription ? 40 : null,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            border: isForDescription ? InputBorder.none : null,
+            counter: Container(),
+            hintText: isForDescription ? AppStrings.addNote : null,
+            prefixIcon: isForDescription ? Icon(Icons.bookmark_border, color: Colors.grey,) : null,
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey.shade300
+              )
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.grey.shade300
+              )
+            ),
+          ),
+          onFieldSubmitted: (value) {},
+          onChanged: (value) {},
+        ),
+      ),
+    );
+  }
+}

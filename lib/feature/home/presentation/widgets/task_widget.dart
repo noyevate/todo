@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:todo/core/utils/colors.dart';
+import 'package:todo/core/utils/format_time.dart';
 import 'package:todo/core/utils/reusable_text.dart';
+import 'package:todo/feature/task/domain/entities/task.dart';
+import 'package:todo/feature/task/presentation/bloc/task_bloc.dart';
+import 'package:todo/feature/task/presentation/bloc/task_event.dart';
 
 class TaskWidget extends StatelessWidget {
+  final Task task;
   const TaskWidget({
-    super.key,
+    super.key, required this.task,
   });
 
   @override
@@ -30,23 +36,24 @@ class TaskWidget extends StatelessWidget {
           child: ListTile(
             leading: GestureDetector(
               onTap: () {
+                 context.read<TaskBloc>().add(ToggleTaskCompletion(task));
                 // check or uncheck the task
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 600),
                 decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
+                    color: task.isCompleted  ? AppColors.primaryColor : Colors.white,
                     shape: BoxShape.circle,
                     border: Border.all(
                         color: Colors.grey, width: .8)),
-                child: Icon(
+                child:  Icon(
                   Icons.check,
                   color: Colors.white,
                 ),
               ),
             ),
             title: ReuseableText(
-              title: "Done",
+              title: task.title.toString(),
               style: TextStyle(
                   color: Theme.of(context).brightness == Brightness.dark ? AppColors.grey: Colors.black,
                   fontSize: 15,
@@ -57,9 +64,9 @@ class TaskWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ReuseableText(
-                  title: "Description",
+                  title: task.subTitle,
                   style: TextStyle(
-                      color: Colors.grey,
+                      color: Colors.white,
                       fontWeight: FontWeight.w300),
                 ),
                 Align(
@@ -70,16 +77,16 @@ class TaskWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ReuseableText(
-                          title: "Date",
+                          title: formatDateTime(task.createdAtDate, includeTime: true),
                           style: TextStyle(
                               fontSize: 12, color: Colors.grey),
                         ),
                     
-                        ReuseableText(
-                          title: "subDate",
-                          style: TextStyle(
-                              fontSize: 12, color: Colors.grey),
-                        ),
+                        // ReuseableText(
+                        //   title: "subDate",
+                        //   style: TextStyle(
+                        //       fontSize: 12, color: Colors.grey),
+                        // ),
                       ],
                     ),
                   ),

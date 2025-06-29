@@ -1,11 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:todo/core/extensions/space_exs.dart';
 import 'package:todo/core/utils/constanst.dart';
 import 'package:todo/core/utils/reusable_text.dart';
 import 'package:todo/core/utils/strings.dart';
 import 'package:todo/feature/home/presentation/widgets/fa_b.dart';
+import 'package:todo/feature/task/presentation/bloc/task_bloc.dart';
+import 'package:todo/feature/task/presentation/bloc/task_event.dart';
+import 'package:todo/feature/task/presentation/bloc/task_state.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../widgets/task_widget.dart';
@@ -18,15 +22,22 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<int> testing = [1212, 1232, 2387, 3, 34, 34, 34];
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<TaskBloc>(context).add(LoadTasks());
+  }
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
-        floatingActionButton: FaB(),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Expanded(child: _homebody(textTheme, context)));
+      floatingActionButton: FaB(),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Expanded(
+        child: _homebody(textTheme, context),
+      ),
+    );
   }
 
   Widget _homebody(TextTheme textTheme, BuildContext context) {
@@ -122,59 +133,69 @@ class _HomeViewState extends State<HomeView> {
               indent: 80,
             ),
           ),
-          Expanded(
-            child: testing.isNotEmpty
-                ? ListView.builder(
-                    itemCount: testing.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) {
-                      return Dismissible(
-                        direction: DismissDirection.horizontal,
-                        onDismissed: (_) {
-                          // remove the task
-                        },
-                        background: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.delete_forever,
-                              color: Colors.grey,
-                            ),
-                            5.l,
-                            ReuseableText(
-                              title: AppStrings.deleteTask,
-                              style: TextStyle(color: Colors.grey),
-                            )
-                          ],
-                        ),
-                        key: Key(
-                          index.toString(),
-                        ),
-                        child: TaskWidget(),
-                      );
-                    },
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FadeInUp(
-                        child: SizedBox(
-                            height: 180,
-                            width: 180,
-                            child: LottieBuilder.asset(
-                              lottieURL,
-                              animate: testing.isNotEmpty ? false : true,
-                            )),
+          BlocBuilder<TaskBloc, TaskState>(
+            builder: (context, state) {
+              final tasks = state.tasks;
+              if (tasks.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FadeInUp(
+                      child: SizedBox(
+                          height: 180,
+                          width: 180,
+                          child: LottieBuilder.asset(
+                            lottieURL,
+                            animate: tasks.isNotEmpty ? false : true,
+                          )),
+                    ),
+                    FadeInUp(
+                      from: 30,
+                      child: ReuseableText(
+                        title: AppStrings.doneAllTask,
+                        style: TextStyle(),
                       ),
-                      FadeInUp(
-                        from: 30,
-                        child: ReuseableText(
-                          title: AppStrings.doneAllTask,
-                          style: TextStyle(),
+                    )
+                  ],
+                );
+              }
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: tasks.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  var task = state.tasks[index];
+                  return Dismissible(
+                    key: Key(task.id),
+                    direction: DismissDirection.horizontal,
+                    onDismissed: (_) {
+                      // remove the task
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        context.read<TaskBloc>().add(DeleteTask(task.id));
+                      });
+                    },
+                    background: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.delete_forever,
+                          color: Colors.grey,
                         ),
-                      )
-                    ],
-                  ),
+                        5.l,
+                        ReuseableText(
+                          title: AppStrings.deleteTask,
+                          style: TextStyle(color: Colors.grey),
+                        )
+                      ],
+                    ),
+              
+                    child: TaskWidget(
+                      task: task,
+                    ),
+                  );
+                },
+              ));
+            },
           ),
         ],
       ),
