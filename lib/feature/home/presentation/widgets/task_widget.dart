@@ -7,6 +7,7 @@ import 'package:todo/core/utils/reusable_text.dart';
 import 'package:todo/feature/task/domain/entities/task.dart';
 import 'package:todo/feature/task/presentation/bloc/task_bloc.dart';
 import 'package:todo/feature/task/presentation/bloc/task_event.dart';
+import 'package:todo/feature/task/presentation/pages/task_page.dart';
 
 class TaskWidget extends StatelessWidget {
   final Task task;
@@ -18,13 +19,13 @@ class TaskWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // go to the task view page
+        Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(task: task,)));
       },
       child: AnimatedContainer(
           margin:
               EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.3),
+              color: task.isCompleted? AppColors.primaryColor.withOpacity(0.3) : Colors.white,
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
