@@ -10,8 +10,9 @@ class FaB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return FloatingActionButton(
+      key: const Key("123"),
+      onPressed: () {
         Navigator.push(
           context,
           CupertinoPageRoute(builder: (_) => TaskView()),

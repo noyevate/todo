@@ -39,5 +39,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<FilterTasks>((event, emit) {
       emit(state.copyWith(filter: event.filter));
     });
+
+    on<ToggleSortOrder>((event, emit) {
+      final newOrder = state.sortOrder == SortOrder.newestFirst
+          ? SortOrder.oldestFirst
+          : SortOrder.newestFirst;
+
+      emit(state.copyWith(sortOrder: newOrder));
+    });
   }
 }

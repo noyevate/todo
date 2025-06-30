@@ -34,11 +34,190 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       floatingActionButton: FaB(),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Expanded(
-        child: _homebody(textTheme, context),
-      ),
+      body: _homebody(textTheme, context),
     );
   }
+
+  Widget _homebody(TextTheme textTheme, BuildContext context) {
+  final taskBloc = context.watch<TaskBloc>();
+  final sortOrder = taskBloc.state.sortOrder;
+
+  return SafeArea(
+    child: Column(
+      children: [
+        20.s,
+
+        // Progress Indicator + Title
+        Container(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  value: 1 / 3,
+                  backgroundColor: Colors.grey,
+                  valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+                ),
+              ),
+              25.l,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.mainTitle,
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.grey
+                          : AppColors.darkgrey,
+                      fontSize: 45,
+                    ),
+                  ),
+                  3.s,
+                  Text(
+                    "1 of 3",
+                    style: textTheme.titleMedium,
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+
+        // Filter Tabs + Sort Button
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Filter Tabs
+              Row(
+                children: TaskFilter.values.map((filter) {
+                  final isSelected = filter == taskBloc.state.filter;
+                  final label = {
+                    TaskFilter.all: "All",
+                    TaskFilter.active: "Active",
+                    TaskFilter.completed: "Completed",
+                  }[filter]!;
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        context.read<TaskBloc>().add(FilterTasks(filter));
+                      },
+                      child: Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              // Sort Button
+              IconButton(
+                onPressed: () {
+                  context.read<TaskBloc>().add(ToggleSortOrder());
+                },
+                icon: Icon(
+                  sortOrder == SortOrder.newestFirst
+                      ? Icons.arrow_downward
+                      : Icons.arrow_upward,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                tooltip: "Sort by Date",
+              )
+            ],
+          ),
+        ),
+
+        Divider(thickness: 2, indent: 80),
+
+        // Task List
+        Expanded(
+          child: BlocBuilder<TaskBloc, TaskState>(
+            builder: (context, state) {
+              final filteredTasks = state.filteredTasks;
+
+              if (filteredTasks.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FadeInUp(
+                        child: SizedBox(
+                          height: 180,
+                          width: 180,
+                          child: LottieBuilder.asset(
+                            lottieURL,
+                            animate: true,
+                          ),
+                        ),
+                      ),
+                      FadeInUp(
+                        from: 30,
+                        child: ReuseableText(
+                          title: AppStrings.doneAllTask,
+                          style: const TextStyle(),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: filteredTasks.length,
+                itemBuilder: (context, index) {
+                  final task = filteredTasks[index];
+                  return Dismissible(
+                    key: Key(task.id),
+                    direction: DismissDirection.horizontal,
+                    onDismissed: (_) {
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        context.read<TaskBloc>().add(DeleteTask(task.id));
+                      });
+                    },
+                    background: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.delete_forever, color: Colors.grey),
+                        5.l,
+                        ReuseableText(
+                          title: AppStrings.deleteTask,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    child: TaskWidget(task: task),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+}
+
 
   // Widget _homebody(TextTheme textTheme, BuildContext context) {
   //   return SizedBox(
@@ -202,160 +381,4 @@ class _HomeViewState extends State<HomeView> {
   //   );
   // }
 
-  Widget _homebody(TextTheme textTheme, BuildContext context) {
-  return SizedBox(
-    width: double.infinity,
-    height: double.infinity,
-    child: Column(
-      children: [
-        70.s,
-        Container(
-          height: 80,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  value: 1 / 3,
-                  backgroundColor: Colors.grey,
-                  valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
-                ),
-              ),
-              25.l,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppStrings.mainTitle,
-                    style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? AppColors.grey
-                          : AppColors.darkgrey,
-                      fontSize: 45,
-                    ),
-                  ),
-                  3.s,
-                  Text(
-                    "1 of 3",
-                    style: textTheme.titleMedium,
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-
-        /// ✅ Filter Tabs
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: TaskFilter.values.map((filter) {
-              final isSelected = filter == context.watch<TaskBloc>().state.filter;
-              final label = {
-                TaskFilter.all: "All",
-                TaskFilter.active: "Active",
-                TaskFilter.completed: "Completed",
-              }[filter]!;
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: GestureDetector(
-                  onTap: () {
-                    context.read<TaskBloc>().add(FilterTasks(filter));
-                  },
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Theme.of(context).textTheme.bodyMedium!.color,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-
-        Padding(
-          padding: EdgeInsets.only(top: 5),
-          child: Divider(
-            thickness: 2,
-            indent: 80,
-          ),
-        ),
-
-        /// ✅ Task List
-        BlocBuilder<TaskBloc, TaskState>(
-          builder: (context, state) {
-            final filteredTasks = state.filteredTasks;
-
-            if (filteredTasks.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeInUp(
-                    child: SizedBox(
-                      height: 180,
-                      width: 180,
-                      child: LottieBuilder.asset(
-                        lottieURL,
-                        animate: true,
-                      ),
-                    ),
-                  ),
-                  FadeInUp(
-                    from: 30,
-                    child: ReuseableText(
-                      title: AppStrings.doneAllTask,
-                      style: TextStyle(),
-                    ),
-                  )
-                ],
-              );
-            }
-
-            return Expanded(
-              child: ListView.builder(
-                itemCount: filteredTasks.length,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  final task = filteredTasks[index];
-                  return Dismissible(
-                    key: Key(task.id),
-                    direction: DismissDirection.horizontal,
-                    onDismissed: (_) {
-                      Future.delayed(const Duration(milliseconds: 1000), () {
-                        context.read<TaskBloc>().add(DeleteTask(task.id));
-                      });
-                    },
-                    background: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete_forever, color: Colors.grey),
-                        5.l,
-                        ReuseableText(
-                          title: AppStrings.deleteTask,
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                    child: TaskWidget(task: task),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-}
+  

@@ -31,3 +31,6 @@ class FilterTasks extends TaskEvent {
   FilterTasks(this.filter);
 }
 
+class ToggleSortOrder extends TaskEvent {}
+
+

@@ -19,7 +19,7 @@ void main() async {
   await Hive.openBox<TaskModel>('tasks');
 
   // Setup repository
-  final taskRepository = HiveTaskRepositoryImpl();
+  final taskRepository = HiveTaskRepository();
 
   runApp(
     MultiBlocProvider(
