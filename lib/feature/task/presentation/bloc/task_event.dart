@@ -1,5 +1,6 @@
 
 import 'package:todo/feature/task/domain/entities/task.dart';
+import 'package:todo/feature/task/presentation/bloc/task_state.dart';
 
 abstract class TaskEvent {}
 
@@ -24,3 +25,9 @@ class UpdateTask extends TaskEvent {
   final Task task;
   UpdateTask(this.task);
 }
+
+class FilterTasks extends TaskEvent {
+  final TaskFilter filter;
+  FilterTasks(this.filter);
+}
+

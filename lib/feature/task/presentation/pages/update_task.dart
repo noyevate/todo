@@ -31,16 +31,14 @@ class _UpdateSingleTaskState extends State<UpdateSingleTask> {
     if (controller.text.trim().isEmpty) return;
 
     final updatedTask = widget.task.copyWith(
-  title: controller.text.trim(),
+      title: controller.text.trim(),
       subTitle: descriptionTaskController.text.trim(),
-  // keep id unchanged!
-);
+    );
 
     context.read<TaskBloc>().add(UpdateTask(updatedTask));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeView())); // return to home
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => HomeView())); // return to home
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -99,27 +97,27 @@ class _UpdateSingleTaskState extends State<UpdateSingleTask> {
     return Padding(
       padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
       child: Center(
-              child: SizedBox(
-                width: 300.w,
-                child: MaterialButton(
-                            onPressed: () {
-                             _submit();
-                            },
-                            minWidth: 130,
-                            color: AppColors.primaryColor,
-                            height: 35,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Center(
-                              child: ReuseableText(
-                                title: AppStrings.updateCurrentTask,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
+        child: SizedBox(
+          width: 300.w,
+          child: MaterialButton(
+            onPressed: () {
+              _submit();
+            },
+            minWidth: 130,
+            color: AppColors.primaryColor,
+            height: 35,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Center(
+              child: ReuseableText(
+                title: AppStrings.updateCurrentTask,
+                style: TextStyle(color: Colors.white),
               ),
             ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -138,14 +136,20 @@ class _UpdateSingleTaskState extends State<UpdateSingleTask> {
           text: TextSpan(
               text: "Update ",
               style: TextStyle(
-                fontSize: 28,
-                      fontWeight: FontWeight.w400, color: Theme.of(context).brightness == Brightness.dark ? AppColors.grey: Colors.black), 
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.grey
+                      : Colors.black),
               children: [
                 TextSpan(
                   text: AppStrings.taskStrnig,
                   style: TextStyle(
-                    fontSize: 28,
-                      fontWeight: FontWeight.w400, color: Theme.of(context).brightness == Brightness.dark ? AppColors.grey: Colors.black),
+                      fontSize: 28,
+                      fontWeight: FontWeight.w400,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.grey
+                          : Colors.black),
                 )
               ]),
         ),
@@ -158,6 +162,4 @@ class _UpdateSingleTaskState extends State<UpdateSingleTask> {
       ],
     );
   }
-
-  
 }

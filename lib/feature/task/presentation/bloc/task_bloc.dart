@@ -35,5 +35,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       final tasks = await repository.getTasks();
       emit(state.copyWith(tasks: tasks));
     });
+
+    on<FilterTasks>((event, emit) {
+      emit(state.copyWith(filter: event.filter));
+    });
   }
 }
