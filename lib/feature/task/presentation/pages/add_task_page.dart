@@ -130,7 +130,13 @@ class _TaskViewState extends State<TaskView> {
         RichText(
           text: TextSpan(
               text: "Add New ",
-              style: textTheme.titleLarge,
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.grey
+                      : Colors.black),
+              
               children: [
                 TextSpan(
                   text: AppStrings.taskStrnig,

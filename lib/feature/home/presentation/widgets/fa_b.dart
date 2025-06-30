@@ -11,7 +11,7 @@ class FaB extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      key: const Key("123"),
+      key: Key('addTaskFab'),
       onPressed: () {
         Navigator.push(
           context,
