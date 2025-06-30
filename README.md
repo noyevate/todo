@@ -27,5 +27,5 @@ Presentation Layer: Handles UI and state using flutter_bloc. It listens to event
 This structure improves maintainability, scalability, and testability by keeping each layer decoupled.
 
 
-State Management
+# State Management
 This app uses flutter_bloc for state management following the Bloc pattern. All user actions (adding, updating, filtering) are handled via Bloc events and states.
