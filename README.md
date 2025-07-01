@@ -30,4 +30,4 @@ This structure improves maintainability, scalability, and testability by keeping
 # State Management
 This app uses flutter_bloc for state management following the Bloc pattern. All user actions (adding, updating, filtering) are handled via Bloc events and states.
 # app_walkthrough video: 
-   https://drive.google.com/file/d/1bepS9pjWCXBzPLcF-Y5ykxgXwFdouim_/view?usp=sharing
+   https://drive.google.com/file/d/1GoKyiRmU8zsjVdLkI3WF1nDU62fHVTCM/view?usp=sharing
