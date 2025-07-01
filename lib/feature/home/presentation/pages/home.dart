@@ -66,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
                         valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
                       ),
                     ),
-                    25.l,
+                    25.l, 
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,

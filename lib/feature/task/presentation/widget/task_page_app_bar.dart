@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/feature/task/domain/entities/task.dart';
+import 'package:todo/feature/home/presentation/pages/home.dart';
 import 'package:todo/feature/task/presentation/bloc/task_bloc.dart';
 import 'package:todo/feature/task/presentation/bloc/task_event.dart';
 
@@ -28,6 +29,8 @@ class TaskPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             GestureDetector(
               onTap: () {
                 context.read<TaskBloc>().add(DeleteTask(task.id));
+                Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => HomeView())); 
               },
               child: Icon(Icons.delete_outline_sharp))
           ],
